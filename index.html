@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>IO Chat</title>
+    <title>Node Chat App</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!-- <link href="css/style.css" rel="stylesheet" /> -->
@@ -9,27 +9,175 @@
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
     />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap"
+      rel="stylesheet"
+    />
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <style>
-      body {
-        margin-top: 30px;
+      @media only screen and (max-width: 600px) {
+        #userFormArea {
+          width: 80%;
+        }
+        .messages {
+          height: 65vh;
+        }
+        #chat {
+          height: 40vh;
+        }
       }
+      @media only screen and (min-width: 600px) {
+        #userFormArea {
+          width: 50%;
+        }
+        .messages {
+          height: 95vh;
+        }
+        #chat {
+          height: 70vh;
+        }
+      }
+      body {
+        position: relative;
+        font-family: "Open Sans", sans-serif;
+
+        background: linear-gradient(to right bottom, #2196f3, #f83223);
+        background-size: 400% 400%;
+        -webkit-animation: Gradient 7s ease infinite;
+        -moz-animation: Gradient 7s ease infinite;
+        animation: Gradient 7s ease infinite;
+      }
+      @-webkit-keyframes Gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @-moz-keyframes Gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      @keyframes Gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
       #messageArea {
         display: none;
+      }
+      #userFormArea {
+        background: linear-gradient(to right bottom, #2196f3, #f83223);
+        background-size: 400% 400%;
+        -webkit-animation: Gradient 7s ease infinite;
+        -moz-animation: Gradient 7s ease infinite;
+        animation: Gradient 7s ease infinite;
+        padding: 10px;
+        border-radius: 20px;
+        color: #fff;
+
+        height: 75vh;
+        left: 50%;
+        transform: translateX(-50%);
+        position: absolute;
+        margin-top: 15vh;
+      }
+      .divCenter {
+        left: 50%;
+
+        transform: translateX(-50%);
+        position: absolute;
+      }
+      #username {
+        min-width: 200px;
+      }
+      .text {
+        font-size: 1.5em;
+        font-weight: 300;
+      }
+      .submitBtn {
+        left: 50%;
+        transform: translateX(-50%);
+        position: absolute;
+        padding: 10px;
+      }
+      .line {
+        height: 2px;
+        background-color: #ffffff;
+      }
+      #messageArea {
+        padding: 15px;
+      }
+      .messages {
+        padding: 10px;
+        background-color: #fdfdfd;
+        border-radius: 10px;
+      }
+      #message {
+        resize: none;
+        margin-bottom: 5px;
+      }
+      #chat {
+        background-color: #c9c9c9;
+        overflow-y: auto;
+        border-radius: 5px;
+        padding: 5px;
+      }
+      #messageForm {
+        padding: 10px;
+        position: relative;
+      }
+      .details {
+        text-align: center;
       }
     </style>
   </head>
   <body>
     <div class="container">
       <div id="userFormArea" class="row">
-        <div class="col-md-12">
+        <h1 class="details">Node Chat App</h1>
+        <p class="details">
+          This is a Chat application made in Node.js and Express using Web
+          sockets.<br />
+          Enter a username to and click login to check it out.
+        </p>
+        <hr class="line" />
+        <div class="col-md-6 divCenter">
           <form id="userForm">
             <div class="form-group">
-              <label>Enter Username</label>
-              <input class="form-control" id="username" />
+              <label class="text">Enter Username</label>
+              <input
+                class="form-control"
+                id="username"
+                placeholder="Username"
+              />
               <br />
-              <input type="submit" class="btn btn-primary" value="Login" />
+              <input
+                type="submit"
+                class="btn submitBtn btn-success col-md-8"
+                value="Login"
+              />
             </div>
           </form>
         </div>
@@ -41,7 +189,7 @@
             <ul class="list-group" id="users"></ul>
           </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-8 messages">
           <div class="chat" id="chat"></div>
           <form id="messageForm">
             <div class="form-group">
@@ -50,11 +198,12 @@
                 name="message"
                 class="form-control"
                 id="message"
+                placeholder="Message"
               ></textarea>
-              <br />
+
               <input
                 type="submit"
-                class="btn btn-primary"
+                class="btn  btn-primary "
                 value="Send Message"
               />
             </div>
